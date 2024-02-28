@@ -82,6 +82,12 @@
                 .join("path")
                 .on("click", this.clicked)
                 .attr("d", this.path)
+                .on("mouseover", function (event) {
+                    d3.select(event.target).attr("fill", "rgba(68,68,68,0.7)")
+                })
+                .on("mouseout", function (event) {
+                    d3.select(event.target).attr("fill", "#444")
+                })
 
             this.regions.append("title")
                 .text(d => d.properties.NAME_1);
