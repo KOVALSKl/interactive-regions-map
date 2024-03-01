@@ -23,38 +23,6 @@
             }
         },
 
-        methods: {
-          zoomed(event) {
-              const {transform} = event;
-              this.g.attr("transform", transform);
-              this.g.attr("stroke-width", 1 / transform.k);
-          },
-
-          reset() {
-              this.regions.transition().style("fill", null);
-              this.svg.transition().duration(750).call(
-                  this.zoom.transform,
-                  d3.zoomIdentity,
-                  d3.zoomTransform(this.svg.node()).invert([this.width / 2, this.height / 2])
-              );
-          },
-
-          clicked(event, d) {
-              const [[x0, y0], [x1, y1]] = this.path.bounds(d);
-              event.stopPropagation();
-              this.regions.transition().style("fill", null);
-              d3.select(event.target).transition().style("fill", "red");
-              this.svg.transition().duration(750).call(
-                  this.zoom.transform,
-                  d3.zoomIdentity
-                      .translate(this.width / 2, this.height / 2)
-                      .scale(Math.min(8, 0.9 / Math.max((x1 - x0) / this.width, (y1 - y0) / this.height)))
-                      .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
-                  d3.pointer(event, this.svg.node())
-              );
-          }
-        },
-
         computed: {
           mapData() {
             return mapJson
