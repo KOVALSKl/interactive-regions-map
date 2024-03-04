@@ -4,15 +4,20 @@
         id="map"
         :width="props.width"
         :height="props.height"
+        :transform="transform"
         :viewBox="[0,0,props.width, props.height]"
     >
-      <map-region
-          v-for="feature in data.features" :key="feature.properties.NAME_1"
-          :data="feature"
-          :d="path(feature)"
-          :onclick="clicked"
-      >
-      </map-region>
+      <g id="regions-container">
+        <map-region
+                v-for="feature in data.features" :key="feature.properties.NAME_1"
+                :data="feature"
+                :d="path(feature)"
+                :onclick="clicked"
+        >
+        </map-region>
+        <path fill="none" stroke="white" stroke-linejoin="round">
+        </path>
+      </g>
     </svg>
   </div>
 </template>
@@ -32,24 +37,23 @@
 
   const projection = d3.geoTransverseMercator().fitSize([props.width, props.height], props.data)
 
-  const zoom = ref(
-      d3.zoom()
-          .scaleExtent([1, 8])
-          .on("zoom", zoomed)
-  )
+  const path = ref(d3.geoPath().projection(projection))
+  const transform = ref(null)
+  const zoom = ref(null)
   const map = ref(null)
-  const path = ref(
-      d3.geoPath().projection(projection)
-  )
+  const g = ref(null)
+  const regions = ref(null)
+
 
   function zoomed(event) {
     const {transform} = event;
-    map.value.attr("transform", transform);
-    map.value.attr("stroke-width", 1 / transform.k);
+    g.value.attr("transform", transform);
+    g.value.attr("stroke-width", 1 / transform.k);
   }
 
   function reset() {
     console.log(map.value.node())
+    regions.value.transition().style("fill", null)
     map.value.transition().duration(750).call(
         zoom.value.transform,
         d3.zoomIdentity,
@@ -60,7 +64,7 @@
   function clicked(event, d) {
     const [[x0, y0], [x1, y1]] = path.value.bounds(d);
     event.stopPropagation();
-    console.log(event)
+    regions.value.transition().style("fill", null)
     d3.select(event.currentTarget).transition().style("fill", "red");
     map.value.transition().duration(750).call(
         zoom.value.transform,
@@ -73,9 +77,16 @@
   }
 
   onMounted(() => {
-    map.value = d3.select("#map")
+    zoom.value = d3.zoom()
+            .scaleExtent([1, 8])
+            .on("zoom", zoomed)
+
+    map.value = d3.select("svg")
         .on("click", reset)
-    map.value.call(zoom.value)
+        .call(zoom.value)
+
+    regions.value = d3.selectAll("path")
+    g.value = d3.select("#regions-container")
   })
 
 </script>

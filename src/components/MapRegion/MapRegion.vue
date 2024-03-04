@@ -18,17 +18,15 @@
 </script>
 
 <style lang="scss">
-  .tooltip {
-    & {
-      z-index: 10000;
-      background: white;
-    }
-  }
-
   .map-region {
     & {
+      transition: fill ease-in 150ms;
       fill: #444;
       cursor: pointer;
+    }
+
+    &:hover {
+      fill: rgba(68, 68, 68, 0.7)
     }
   }
 </style>
