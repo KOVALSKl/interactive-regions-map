@@ -5,7 +5,6 @@
         :d="mainProps.d"
         @click="(event) => onclick(event, data)"
     >
-      <title>{{data.properties.NAME_1}}</title>
     </path>
   </g>
 </template>
@@ -23,10 +22,17 @@
       transition: fill ease-in 150ms;
       fill: #444;
       cursor: pointer;
+      position: relative;
     }
 
     &:hover {
       fill: rgba(68, 68, 68, 0.7)
+    }
+
+    & .region-tooltip {
+      z-index: 9999;
+
+      color: black;
     }
   }
 </style>

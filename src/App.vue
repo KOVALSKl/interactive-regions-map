@@ -1,37 +1,35 @@
-<template>
-  <regions-map :width="this.width" :height="this.height" :data="this.mapData">
-  </regions-map>
-</template>
-
-<script>
+<script setup>
     import * as d3 from "d3"
+    import {ref, computed} from "vue"
     import mapJson from "./assets/map.json"
 
     import RegionsMap from "@/components/RegionsMap/RegionsMap.vue";
+    import RegionInfo from "@/components/Cards/RegionInfo/RegionInfo.vue"
 
-    export default {
-      components: {RegionsMap},
-        data() {
-            return {
-                width: 900,
-                height: 900,
-            }
-        },
+    const width = 900
+    const height = 900
+    const mapData = computed(() => mapJson)
 
-        computed: {
-          mapData() {
-            return mapJson
-          }
-        },
-    }
 </script>
 
-<style>
-    .map-container {
-        min-width: 100%;
+<template>
+    <div class="app-container w-100">
+      <regions-map :width="width" :height="height" :data="mapData">
+      </regions-map>
+      <region-info>
+      </region-info>
+    </div>
+</template>
 
-        display: flex;
-        justify-content: center;
+<style lang="scss">
+
+  .app-container {
+    & {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        grid-column-gap: 20px;
         align-items: center;
     }
+  }
+
 </style>

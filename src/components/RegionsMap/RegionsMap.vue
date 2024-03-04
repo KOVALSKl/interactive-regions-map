@@ -1,5 +1,5 @@
 <template>
-  <div class="map-container">
+  <div class="map-container w-100">
     <svg
         id="map"
         :width="props.width"
@@ -52,7 +52,6 @@
   }
 
   function reset() {
-    console.log(map.value.node())
     regions.value.transition().style("fill", null)
     map.value.transition().duration(750).call(
         zoom.value.transform,
@@ -93,7 +92,10 @@
 
 <style lang="scss">
   .map-container {
-    & {}
+    & {
+      z-index: 10;
+      min-width: 100%;
+    }
 
     #map {
       transform: rotate(90deg);
