@@ -49,8 +49,8 @@
     }
 
     function invokeRegionClick() {
-      let regionId = currentRegion.value.properties.NAME_1
-      let regionElement = document.querySelector(`#${regionId} > path`)
+      let regionId = currentRegion.value.properties.id
+      let regionElement = document.getElementById(regionId).lastChild
       regionElement.dispatchEvent(new MouseEvent("click", undefined))
     }
 

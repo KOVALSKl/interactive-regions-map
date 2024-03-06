@@ -11,7 +11,7 @@
         <map-region
                 v-for="feature in data.features"
                 :key="feature.properties.NAME_1"
-                :id="feature.properties.NAME_1"
+                :id="feature.properties.id"
                 ref="regionsRef"
                 :data="feature"
                 :d="path(feature)"
