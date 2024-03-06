@@ -1,6 +1,6 @@
 <script setup>
     import * as d3 from "d3"
-    import {ref, computed} from "vue"
+    import {ref, computed, toRaw} from "vue"
     import mapJson from "./assets/map.json"
 
     import RegionsMap from "@/components/RegionsMap/RegionsMap.vue";
@@ -10,13 +10,68 @@
     const height = 900
     const mapData = computed(() => mapJson)
 
+    const currentRegionIndex = ref(0)
+    const regionsRef = ref(null)
+
+
+    const currentRegion = computed(() => {
+      return mapData.value.features[currentRegionIndex.value]
+    })
+
+    function setRegionsRef(value) {
+      regionsRef.value = value
+    }
+
+    function setRegionIndex(value) {
+      if (value >= 0 && value < mapData.value.features.length) {
+        currentRegionIndex.value = value
+      }
+    }
+
+    function nextRegion() {
+      currentRegionIndex.value += 1
+
+      if (currentRegionIndex.value === mapData.value.features.length) {
+        currentRegionIndex.value = 0
+      }
+
+      invokeRegionClick()
+    }
+
+    function previousRegion() {
+      currentRegionIndex.value -= 1
+
+      if (currentRegionIndex.value < 0) {
+        currentRegionIndex.value = mapData.value.features.length - 1
+      }
+
+      invokeRegionClick()
+    }
+
+    function invokeRegionClick() {
+      let regionId = currentRegion.value.properties.NAME_1
+      let regionElement = document.querySelector(`#${regionId} > path`)
+      regionElement.dispatchEvent(new MouseEvent("click", undefined))
+    }
+
 </script>
 
 <template>
     <div class="app-container w-100">
-      <regions-map :width="width" :height="height" :data="mapData">
+      <regions-map
+          :width="width"
+          :height="height"
+          :data="mapData"
+          :current-region-index="currentRegionIndex"
+          :set-region-index="setRegionIndex"
+          :set-regions-ref="setRegionsRef"
+      >
       </regions-map>
-      <region-info>
+      <region-info
+          :region-data="currentRegion"
+          :on-next="nextRegion"
+          :on-previous="previousRegion"
+      >
       </region-info>
     </div>
 </template>

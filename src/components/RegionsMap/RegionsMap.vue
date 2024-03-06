@@ -9,7 +9,10 @@
     >
       <g id="regions-container">
         <map-region
-                v-for="feature in data.features" :key="feature.properties.NAME_1"
+                v-for="feature in data.features"
+                :key="feature.properties.NAME_1"
+                :id="feature.properties.NAME_1"
+                ref="regionsRef"
                 :data="feature"
                 :d="path(feature)"
                 :onclick="clicked"
@@ -24,7 +27,7 @@
 
 <script setup>
   import * as d3 from "d3"
-  import { ref, onMounted } from "vue"
+  import { ref, onMounted, computed } from "vue"
 
   // Components
   import MapRegion from "@/components/MapRegion/MapRegion.vue";
@@ -33,6 +36,17 @@
     width: Number,
     height: Number,
     data: Object,
+    currentRegionIndex: Number,
+    setRegionIndex: Function,
+    setRegionsRef: Function
+  })
+
+  const currentRegion = computed(() => {
+    return props.data.features[props.currentRegionIndex]
+  })
+
+  const regionsData = computed(() => {
+    return props.data.features
   })
 
   const projection = d3.geoTransverseMercator().fitSize([props.width, props.height], props.data)
@@ -42,8 +56,17 @@
   const zoom = ref(null)
   const map = ref(null)
   const g = ref(null)
-  const regions = ref(null)
 
+  const regionsHTMlTags = ref(null)
+  const regionsRef = ref(null)
+
+  function findRegionIndex(regionData) {
+    for (let i = 0; i < regionsData.value.length; i++) {
+      if (regionsData.value[i].properties.NAME_1 === regionData.properties.NAME_1) {
+        return i;
+      }
+    }
+  }
 
   function zoomed(event) {
     const {transform} = event;
@@ -52,7 +75,7 @@
   }
 
   function reset() {
-    regions.value.transition().style("fill", null)
+    regionsHTMlTags.value.transition().style("fill", null)
     map.value.transition().duration(750).call(
         zoom.value.transform,
         d3.zoomIdentity,
@@ -63,7 +86,7 @@
   function clicked(event, d) {
     const [[x0, y0], [x1, y1]] = path.value.bounds(d);
     event.stopPropagation();
-    regions.value.transition().style("fill", null)
+    regionsHTMlTags.value.transition().style("fill", null)
     d3.select(event.currentTarget).transition().style("fill", "red");
     map.value.transition().duration(750).call(
         zoom.value.transform,
@@ -71,8 +94,11 @@
             .translate(props.width / 2, props.height / 2)
             .scale(Math.min(8, 0.9 / Math.max((x1 - x0) / props.width, (y1 - y0) / props.height)))
             .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
-        d3.pointer(event, map.value.node())
+        // d3.pointer(event, map.value.node())
     )
+
+    let regionIndex = findRegionIndex(d)
+    props.setRegionIndex(regionIndex)
   }
 
   onMounted(() => {
@@ -84,7 +110,7 @@
         .on("click", reset)
         .call(zoom.value)
 
-    regions.value = d3.selectAll("path")
+    regionsHTMlTags.value = d3.selectAll("path")
     g.value = d3.select("#regions-container")
   })
 
