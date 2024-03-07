@@ -78,12 +78,21 @@
 <style lang="scss">
 
   .app-container {
-    & {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        grid-column-gap: 20px;
-        align-items: center;
-    }
+      & {
+          display: grid;
+          grid-template-columns: 2fr 1fr;
+          grid-column-gap: 20px;
+          align-items: center;
+      }
+
+      @media screen and (max-width: 576px) {
+          & {
+              grid-template-columns: 1fr;
+              grid-template-rows: 1fr 0.5fr;
+              align-items: center;
+              justify-items: center;
+          }
+      }
   }
 
 </style>
