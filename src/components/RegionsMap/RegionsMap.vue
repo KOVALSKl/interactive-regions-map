@@ -36,6 +36,7 @@
     width: Number,
     height: Number,
     data: Object,
+    indexedRegions: Object,
     currentRegionIndex: Number,
     setRegionIndex: Function,
     setRegionsRef: Function
@@ -45,11 +46,8 @@
     return props.data.features[props.currentRegionIndex]
   })
 
-  const regionsData = computed(() => {
-    return props.data.features
-  })
-
   const projection = d3.geoTransverseMercator().fitSize([props.width, props.height], props.data)
+  const animationDurationTime = 1500
 
   const path = ref(d3.geoPath().projection(projection))
   const transform = ref(null)
@@ -58,14 +56,10 @@
   const g = ref(null)
 
   const regionsHTMlTags = ref(null)
-  const regionsRef = ref(null)
 
-  function findRegionIndex(regionData) {
-    for (let i = 0; i < regionsData.value.length; i++) {
-      if (regionsData.value[i].properties.NAME_1 === regionData.properties.NAME_1) {
-        return i;
-      }
-    }
+  function getRegionIndex(regionData) {
+    let regionId = regionData.properties.id
+    return props.indexedRegions[regionId].index
   }
 
   function zoomed(event) {
@@ -75,8 +69,7 @@
   }
 
   function reset() {
-    regionsHTMlTags.value.transition().style("fill", null)
-    map.value.transition().duration(750).call(
+    map.value.transition().duration(animationDurationTime).call(
         zoom.value.transform,
         d3.zoomIdentity,
         d3.zoomTransform(map.value.node()).invert([props.width / 2, props.height / 2])
@@ -87,18 +80,19 @@
     const [[x0, y0], [x1, y1]] = path.value.bounds(d);
     event.stopPropagation();
     regionsHTMlTags.value.transition().style("fill", null)
+
     d3.select(event.currentTarget).transition().style("fill", "red");
-    map.value.transition().duration(750).call(
+
+    let regionIndex = getRegionIndex(d)
+    props.setRegionIndex(regionIndex)
+
+    map.value.transition().duration(animationDurationTime).call(
         zoom.value.transform,
         d3.zoomIdentity
             .translate(props.width / 2, props.height / 2)
             .scale(Math.min(8, 0.9 / Math.max((x1 - x0) / props.width, (y1 - y0) / props.height)))
-            .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
-        // d3.pointer(event, map.value.node())
+            .translate(-(x0 + x1) / 2, -(y0 + y1) / 2)
     )
-
-    let regionIndex = findRegionIndex(d)
-    props.setRegionIndex(regionIndex)
   }
 
   onMounted(() => {

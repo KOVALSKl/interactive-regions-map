@@ -1,7 +1,9 @@
 <script setup>
     import * as d3 from "d3"
     import {ref, computed, toRaw} from "vue"
+
     import mapJson from "./assets/map.json"
+    import indexedMapFeaturesJson from "./assets/indexed_map.json"
 
     import RegionsMap from "@/components/RegionsMap/RegionsMap.vue";
     import RegionInfo from "@/components/Cards/RegionInfo/RegionInfo.vue"
@@ -9,21 +11,18 @@
     const width = 900
     const height = 900
     const mapData = computed(() => mapJson)
+    const mapDataFeaturesLength = mapData.value.features.length
+    const indexedMapFeatures = computed(() => indexedMapFeaturesJson)
 
     const currentRegionIndex = ref(0)
-    const regionsRef = ref(null)
 
 
     const currentRegion = computed(() => {
       return mapData.value.features[currentRegionIndex.value]
     })
 
-    function setRegionsRef(value) {
-      regionsRef.value = value
-    }
-
     function setRegionIndex(value) {
-      if (value >= 0 && value < mapData.value.features.length) {
+      if (value >= 0 && value < mapDataFeaturesLength) {
         currentRegionIndex.value = value
       }
     }
@@ -31,7 +30,7 @@
     function nextRegion() {
       currentRegionIndex.value += 1
 
-      if (currentRegionIndex.value === mapData.value.features.length) {
+      if (currentRegionIndex.value === mapDataFeaturesLength) {
         currentRegionIndex.value = 0
       }
 
@@ -62,9 +61,9 @@
           :width="width"
           :height="height"
           :data="mapData"
+          :indexed-regions="indexedMapFeatures"
           :current-region-index="currentRegionIndex"
           :set-region-index="setRegionIndex"
-          :set-regions-ref="setRegionsRef"
       >
       </regions-map>
       <region-info
