@@ -21,11 +21,6 @@
       return mapData.value.features[currentRegionIndex.value]
     })
 
-    function setRegionIndex(value) {
-      if (value >= 0 && value < mapDataFeaturesLength) {
-        currentRegionIndex.value = value
-      }
-    }
 
     function nextRegion() {
       currentRegionIndex.value += 1
@@ -49,50 +44,25 @@
 
     function invokeRegionClick() {
       let regionId = currentRegion.value.properties.id
-      let regionElement = document.getElementById(regionId).lastChild
-      regionElement.dispatchEvent(new MouseEvent("click", undefined))
+      let regionPathElement = document.getElementById(regionId).lastChild
+        regionPathElement.dispatchEvent(new MouseEvent("click", undefined))
     }
 
 </script>
 
 <template>
-    <div class="app-container w-100">
-      <regions-map
-          :width="width"
-          :height="height"
-          :data="mapData"
-          :indexed-regions="indexedMapFeatures"
-          :current-region-index="currentRegionIndex"
-          :set-region-index="setRegionIndex"
-      >
-      </regions-map>
-      <region-info
-          :region-data="currentRegion"
-          :on-next="nextRegion"
-          :on-previous="previousRegion"
-      >
-      </region-info>
-    </div>
+    <regions-map
+            :width="width"
+            :height="height"
+            :current-region-index="currentRegionIndex"
+    >
+        <template #region-data-description>
+            <region-info
+                    :region-data="currentRegion"
+                    :on-next="nextRegion"
+                    :on-previous="previousRegion"
+            >
+            </region-info>
+        </template>
+    </regions-map>
 </template>
-
-<style lang="scss">
-
-  .app-container {
-      & {
-          display: grid;
-          grid-template-columns: 2fr 1fr;
-          grid-column-gap: 20px;
-          align-items: center;
-      }
-
-      @media screen and (max-width: 576px) {
-          & {
-              grid-template-columns: 1fr;
-              grid-template-rows: 1fr 0.5fr;
-              align-items: center;
-              justify-items: center;
-          }
-      }
-  }
-
-</style>

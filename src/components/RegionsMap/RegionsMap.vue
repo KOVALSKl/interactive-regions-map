@@ -1,54 +1,39 @@
-<template>
-  <div class="map-container w-100">
-    <svg
-        id="map"
-        :width="props.width"
-        :height="props.height"
-        :transform="transform"
-        :viewBox="[0,0,props.width, props.height]"
-    >
-      <g id="regions-container">
-        <map-region
-                v-for="feature in data.features"
-                :key="feature.properties.NAME_1"
-                :id="feature.properties.id"
-                ref="regionsRef"
-                :data="feature"
-                :d="path(feature)"
-                :onclick="clicked"
-        >
-        </map-region>
-        <path fill="none" stroke="white" stroke-linejoin="round">
-        </path>
-      </g>
-    </svg>
-  </div>
-</template>
-
 <script setup>
   import * as d3 from "d3"
   import { ref, onMounted, computed } from "vue"
 
   // Components
   import MapRegion from "@/components/MapRegion/MapRegion.vue";
+  import RegionInfo from "@/components/Cards/RegionInfo/RegionInfo.vue"
+
+  // GEO DATA
+  import regionsJSON from "@/assets/map.json"
+  import regionsIndexesJSON from "@/assets/indexed_map.json"
 
   const props = defineProps({
-    width: Number,
-    height: Number,
-    data: Object,
-    indexedRegions: Object,
-    currentRegionIndex: Number,
-    setRegionIndex: Function,
-    setRegionsRef: Function
+    width: {
+      type: Number,
+      default: 900
+    },
+    height: {
+      type: Number,
+      default: 900
+    },
+    regions: {
+      type: Object,
+      default: regionsJSON
+    },
+    regionsIndexes: {
+      type: Object,
+      default: regionsIndexesJSON
+    }
   })
 
-  const currentRegion = computed(() => {
-    return props.data.features[props.currentRegionIndex]
-  })
-
-  const projection = d3.geoTransverseMercator().fitSize([props.width, props.height], props.data)
+  const mapDataFeaturesLength = props.regions.features.length
+  const projection = d3.geoTransverseMercator().fitSize([props.width, props.height], props.regions)
   const animationDurationTime = 1500
 
+  const currentRegionIndex = ref(0)
   const path = ref(d3.geoPath().projection(projection))
   const transform = ref(null)
   const zoom = ref(null)
@@ -57,9 +42,53 @@
 
   const regionsHTMlTags = ref(null)
 
-  function getRegionIndex(regionData) {
-    let regionId = regionData.properties.id
-    return props.indexedRegions[regionId].index
+  const currentRegion = computed(() => {
+    return props.regions.features[currentRegionIndex.value]
+  })
+
+  function setRegionIndex(value) {
+    if (value >= 0 && value < mapDataFeaturesLength) {
+      currentRegionIndex.value = value
+    }
+  }
+
+  function findRegionIndex(value) {
+    for(let i = 0; i < mapDataFeaturesLength; i++) {
+      if (props.regions[i].properties.id === value.properties.id) {
+        return i;
+      }
+    }
+  }
+
+  function getRegionIndex(value) {
+    let regionId = value.properties.id
+    return props.regionsIndexes[regionId].index
+  }
+
+  function nextRegion() {
+    currentRegionIndex.value += 1
+
+    if (currentRegionIndex.value === mapDataFeaturesLength) {
+      currentRegionIndex.value = 0
+    }
+
+    invokeRegionClick()
+  }
+
+  function previousRegion() {
+    currentRegionIndex.value -= 1
+
+    if (currentRegionIndex.value < 0) {
+      currentRegionIndex.value = mapData.value.features.length - 1
+    }
+
+    invokeRegionClick()
+  }
+
+  function invokeRegionClick() {
+    let regionId = currentRegion.value.properties.id
+    let regionPathElement = document.getElementById(regionId).lastChild
+    regionPathElement.dispatchEvent(new MouseEvent("click", undefined))
   }
 
   function zoomed(event) {
@@ -83,8 +112,14 @@
 
     d3.select(event.currentTarget).transition().style("fill", "red");
 
-    let regionIndex = getRegionIndex(d)
-    props.setRegionIndex(regionIndex)
+    let regionIndex;
+
+    if(props.regionsIndexes)
+      regionIndex = getRegionIndex(d)
+    else
+      regionIndex = findRegionIndex(d)
+
+    setRegionIndex(regionIndex)
 
     map.value.transition().duration(animationDurationTime).call(
         zoom.value.transform,
@@ -110,11 +145,54 @@
 
 </script>
 
+<template>
+  <div class="map-container w-100">
+    <svg
+            id="map"
+            :width="props.width"
+            :height="props.height"
+            :transform="transform"
+            :viewBox="[0,0,props.width, props.height]"
+    >
+      <g id="regions-container">
+        <map-region
+                v-for="feature in regions.features"
+                :key="feature.properties.NAME_1"
+                :id="feature.properties.id"
+                ref="regionsRef"
+                :data="feature"
+                :d="path(feature)"
+                :onclick="clicked"
+        >
+        </map-region>
+        <path fill="none" stroke="white" stroke-linejoin="round">
+        </path>
+      </g>
+    </svg>
+    <slot name="region-data-description">
+    </slot>
+  </div>
+</template>
+
 <style lang="scss">
   .map-container {
     & {
       z-index: 10;
       min-width: 100%;
+
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-column-gap: 20px;
+      align-items: center;
+    }
+
+    @media screen and (max-width: 576px) {
+      & {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 0.5fr;
+        align-items: center;
+        justify-items: center;
+      }
     }
 
     #map {
