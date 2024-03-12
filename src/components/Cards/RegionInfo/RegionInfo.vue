@@ -8,10 +8,17 @@
         </v-card-text>
         <v-card-actions>
             <v-spacer/>
+<<<<<<< HEAD
             <v-btn variant="text" @click="$emit('next')">
               назад
             </v-btn>
             <v-btn variant="text" @click="$emit('previous')">
+=======
+            <v-btn variant="text" @click="onPrevious">
+              назад
+            </v-btn>
+            <v-btn variant="text" @click="onNext">
+>>>>>>> 7b7f7887ed2b53d1787237e167e64a4882f4eb56
               далее
             </v-btn>
         </v-card-actions>
@@ -19,11 +26,9 @@
 </template>
 
 <script setup>
-
     const props = defineProps(["regionData"])
 
     defineEmits(['next', 'previous'])
-
 </script>
 
 <style lang="scss">
