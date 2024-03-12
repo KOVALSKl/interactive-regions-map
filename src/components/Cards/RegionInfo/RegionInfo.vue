@@ -28,6 +28,7 @@
     #region-info-card {
         & {
             border-radius: 20px;
+            max-width: 400px;
         }
     }
 </style>

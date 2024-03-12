@@ -184,16 +184,17 @@
       z-index: 10;
       min-width: 100%;
 
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      grid-column-gap: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+
       align-items: center;
     }
 
     @media screen and (max-width: 576px) {
       & {
+        display: grid;
         grid-template-columns: 1fr;
-        grid-template-rows: 1fr 0.5fr;
         align-items: center;
         justify-items: center;
       }
