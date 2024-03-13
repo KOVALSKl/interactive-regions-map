@@ -17,11 +17,9 @@
     },
     regions: {
       type: Object,
-      default: regionsJSON
     },
     regionsIndexes: {
       type: Object,
-      default: regionsIndexesJSON
     }
   })
 
