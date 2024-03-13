@@ -5,6 +5,7 @@
   // Components
   import MapRegion from "@/components/MapRegion/MapRegion.vue";
   import RegionInfo from "@/components/Cards/RegionInfo/RegionInfo.vue"
+  import {tr} from "vuetify/locale";
 
   const props = defineProps({
     width: {
@@ -17,9 +18,11 @@
     },
     regions: {
       type: Object,
+      required: true
     },
     regionsIndexes: {
       type: Object,
+      default: {}
     }
   })
 
