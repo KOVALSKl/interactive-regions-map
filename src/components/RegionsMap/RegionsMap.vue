@@ -22,7 +22,7 @@
     },
     regionsIndexes: {
       type: Object,
-      default: {}
+      default: null
     }
   })
 
