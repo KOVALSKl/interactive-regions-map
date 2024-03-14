@@ -6,10 +6,6 @@
   import MapRegion from "@/components/MapRegion/MapRegion.vue";
   import RegionInfo from "@/components/Cards/RegionInfo/RegionInfo.vue"
 
-  // GEO DATA
-  import regionsJSON from "@/assets/map.json"
-  import regionsIndexesJSON from "@/assets/indexed_map.json"
-
   const props = defineProps({
     width: {
       type: Number,
@@ -21,11 +17,11 @@
     },
     regions: {
       type: Object,
-      default: regionsJSON
+      required: true
     },
     regionsIndexes: {
       type: Object,
-      default: regionsIndexesJSON
+      default: null
     }
   })
 
