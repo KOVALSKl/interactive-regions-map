@@ -8,26 +8,27 @@
         </v-card-text>
         <v-card-actions>
             <v-spacer/>
-            <v-btn variant="text" @click="onPrevious">
-              назад
+            <v-btn variant="text" @click="$emit('next')">
+                previous
             </v-btn>
-            <v-btn variant="text" @click="onNext">
-              далее
+            <v-btn variant="text" @click="$emit('previous')">
+                next
             </v-btn>
         </v-card-actions>
     </v-card>
 </template>
 
 <script setup>
-    import {ref, computed} from "vue"
+    const props = defineProps(["regionData"])
 
-    const props = defineProps(["regionData", "onNext", "onPrevious"])
+    defineEmits(['next', 'previous'])
 </script>
 
 <style lang="scss">
     #region-info-card {
         & {
             border-radius: 20px;
+            max-width: 400px;
         }
     }
 </style>

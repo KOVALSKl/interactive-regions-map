@@ -1,8 +1,35 @@
 {
   "name": "interactive-regions-map",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.0.6",
+  "private": false,
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KOVALSKl/interactive-russian-regions-map.git"
+  },
+  "keywords": [
+    "map",
+    "interactive",
+    "regions",
+    "vue",
+    "vuejs",
+    "vue3",
+    "d3",
+    "zoom"
+  ],
+  "files": ["dist", "src/components"],
+  "main": "./dist/interactive-regions-map.umd.cjs",
+  "module": "./dist/interactive-regions-map.js",
+  "exports": {
+    ".": {
+      "import": "./dist/interactive-regions-map.js",
+      "require": "./dist/interactive-regions-map.umd.cjs"
+    },
+    "./dist/style.css": {
+      "import": "./dist/style.css",
+      "require": "./dist/style.css"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "host": "vite --host --port 3000",
@@ -11,13 +38,17 @@
   },
   "dependencies": {
     "d3": "^7.8.5",
-    "sass": "^1.71.1",
-    "vue": "^3.4.15",
-    "vue-router": "^4.2.5",
-    "vuetify": "^3.5.6"
+    "vue": "^3.4.15"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0",
+    "d3": "^7.8.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.3",
-    "vite": "^5.0.11"
+    "sass": "^1.71.1",
+    "vite": "^5.0.11",
+    "vue-router": "^4.3.0",
+    "vuetify": "^3.5.8"
   }
 }
