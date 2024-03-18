@@ -31,11 +31,14 @@ Each region is a Map Region component.
 
 <b>Props</b>:
 
-1. <b>width</b> - width of main svg component <b>(default: 900px)</b>;
-2. <b>height</b> - height of main svg component <b>(default: 900px)</b>;
-3. <b>regions</b> - <b>JSON</b> object that stores region data <b>(required)</b>. 
-4. <b>regionsIndexes</b> - <b>JSON</b> object that stores indexes of region 
-to optimize their search <b>(default: null)</b>
+| Name | Description | Default | Required |
+|:---:|:---:|:---:|:---:|
+| width | Width of main svg component | 900px | - |
+| height | Height of main svg component | 900px | - |
+| regions | JSON object that stores region data | - | + |
+| regionsIndexes | JSON object that stores indexes of region to optimize their search | null | - |
+| mapProjection | Custom map projection based on d3 mercators objects, using to manipulate your map | null | - |
+| animationDurationTime | Oh wow, just duration time for your animations on map | 1500 | - |
 
 The <b>regions</b> prop has a geo.json structure, so your object should look like this:
 ```json
@@ -83,23 +86,29 @@ The keys of the object are the region id's.
 
 <b>Props</b>:
 
-1. <b>d</b> - the coordinates of the region rendering <b>(required)</b>
-2. <b>data</b> - the information about the region <b>(required)</b> for now
-3. <b>onclick</b> - the method that is invoked after click <b>(required)</b> for now
+| Name | Description | Default | Required |
+|:---:|:---:|:---:|:---:|
+| d | Coordinates of the region rendering | - | + |
+| data | Information about the region | - | + |
+| onclick | Method that is invoked after click | - | + |
 
 <b>RegionInfo</b> - The Region Info Component is a component that visualize the data of the selected region,
 which is stored inside the Map Region Component using <b>data</b> prop.
 
 <b>Props</b>:
 
-1. <b>regionData</b> - the data which stored inside clicked region <b>(required)</b>
+| Name | Description | Default | Required |
+|:---:|:---:|:---:|:---:|
+| regionData | Data which stored inside clicked region | - | + |
 
 <b>Emits</b>:
 
 This component emits events with default handlers that can be updated
 
-1. <b>next</b> - The next event occurs after clicking the "Next" button (to change selected region - forward)
-2. <b>previous</b> - The previous event occurs after clicking the "Previous" button (to change selected region - back)
+| Name | Description | Effect |
+|:---:|:---:|:---:|
+| nextRegion | This event occurs after clicking the "Next" button | Change selected region - forward |
+| previousRegion | This event occurs after clicking the "Previous" button | Change selected region - backward |
  
 
 <b>Where can I find the JSON file with the coordinates of my country or anything else?</b>

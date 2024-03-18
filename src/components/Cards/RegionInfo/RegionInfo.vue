@@ -8,10 +8,10 @@
         </v-card-text>
         <v-card-actions>
             <v-spacer/>
-            <v-btn variant="text" @click="$emit('next')">
+            <v-btn variant="text" @click="$emit('previousRegion')">
                 previous
             </v-btn>
-            <v-btn variant="text" @click="$emit('previous')">
+            <v-btn variant="text" @click="$emit('nextRegion')">
                 next
             </v-btn>
         </v-card-actions>
@@ -21,7 +21,7 @@
 <script setup>
     const props = defineProps(["regionData"])
 
-    defineEmits(['next', 'previous'])
+    defineEmits(['nextRegion', 'previousRegion'])
 </script>
 
 <style lang="scss">

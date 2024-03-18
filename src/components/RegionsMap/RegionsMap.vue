@@ -23,15 +23,30 @@
     regionsIndexes: {
       type: Object,
       default: null
+    },
+    mapProjection: {
+      type: Object,
+      default: null
+    },
+    animationDurationTime: {
+      type: Number,
+      default: 1500
     }
   })
 
+  const emits = defineEmits(['nextRegion', 'previousRegion'])
+
   const mapDataFeaturesLength = props.regions.features.length
-  const projection = d3.geoTransverseMercator().fitSize([props.width, props.height], props.regions)
-  const animationDurationTime = 1500
+
+  const projection = computed(() => {
+    return (props.mapProjection ?? d3.geoTransverseMercator()
+            .fitSize([props.width, props.height], props.regions)
+            .rotate([-90, 0])
+            .center([-20, -20]))
+  })
 
   const currentRegionIndex = ref(0)
-  const path = ref(d3.geoPath().projection(projection))
+  const path = ref(d3.geoPath().projection(projection.value))
   const transform = ref(null)
   const zoom = ref(null)
   const map = ref(null)
@@ -70,6 +85,8 @@
     }
 
     invokeRegionClick()
+
+    emits("nextRegion")
   }
 
   function previousRegion() {
@@ -80,6 +97,8 @@
     }
 
     invokeRegionClick()
+
+    emits("previousRegion")
   }
 
   function invokeRegionClick() {
@@ -95,7 +114,7 @@
   }
 
   function reset() {
-    map.value.transition().duration(animationDurationTime).call(
+    map.value.transition().duration(props.animationDurationTime).call(
         zoom.value.transform,
         d3.zoomIdentity,
         d3.zoomTransform(map.value.node()).invert([props.width / 2, props.height / 2])
@@ -118,7 +137,7 @@
 
     setRegionIndex(regionIndex)
 
-    map.value.transition().duration(animationDurationTime).call(
+    map.value.transition().duration(props.animationDurationTime).call(
         zoom.value.transform,
         d3.zoomIdentity
             .translate(props.width / 2, props.height / 2)
@@ -168,8 +187,8 @@
     </svg>
     <slot
             :region-data="currentRegion"
-            @next="nextRegion"
-            @previous="previousRegion"
+            @next-region="nextRegion"
+            @previous-region="previousRegion"
     >
     </slot>
   </div>
@@ -198,7 +217,6 @@
     }
 
     #map {
-      transform: rotate(90deg);
       max-width: 100%;
       height: auto;
     }

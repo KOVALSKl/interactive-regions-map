@@ -15,7 +15,10 @@
     "vuejs",
     "vue3",
     "d3",
-    "zoom"
+    "zoom",
+    "svg",
+    "clickable",
+    "component"
   ],
   "files": ["dist", "src/components"],
   "main": "./dist/interactive-regions-map.umd.cjs",

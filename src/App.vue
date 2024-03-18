@@ -1,10 +1,10 @@
 <script setup>
+    import {computed} from "vue"
     import RegionsMap from "@/components/RegionsMap/RegionsMap.vue";
     import RegionInfo from "@/components/Cards/RegionInfo/RegionInfo.vue"
 
     const width = 720
     const height = 720
-
 </script>
 
 <template>
@@ -18,7 +18,9 @@
                     :height="height"
             >
                 <template #default="props">
-                    <region-info v-bind="props">
+                    <region-info
+                            v-bind="props"
+                    >
                     </region-info>
                 </template>
             </regions-map>
