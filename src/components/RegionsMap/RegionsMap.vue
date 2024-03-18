@@ -5,7 +5,6 @@
   // Components
   import MapRegion from "@/components/MapRegion/MapRegion.vue";
   import RegionInfo from "@/components/Cards/RegionInfo/RegionInfo.vue"
-  import {tr} from "vuetify/locale";
 
   const props = defineProps({
     width: {
@@ -121,8 +120,9 @@
     );
   }
 
-  function clicked(event, d) {
-    const [[x0, y0], [x1, y1]] = path.value.bounds(d);
+  function clicked({event, data}) {
+    console.log(event)
+    const [[x0, y0], [x1, y1]] = path.value.bounds(data);
     event.stopPropagation();
     regionsHTMlTags.value.transition().style("fill", null)
 
@@ -131,9 +131,9 @@
     let regionIndex;
 
     if(props.regionsIndexes)
-      regionIndex = getRegionIndex(d)
+      regionIndex = getRegionIndex(data)
     else
-      regionIndex = findRegionIndex(d)
+      regionIndex = findRegionIndex(data)
 
     setRegionIndex(regionIndex)
 
@@ -178,7 +178,7 @@
                 ref="regionsRef"
                 :data="feature"
                 :d="path(feature)"
-                :onclick="clicked"
+                @region-clicked="clicked"
         >
         </map-region>
         <path fill="none" stroke="white" stroke-linejoin="round">

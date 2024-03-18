@@ -3,7 +3,7 @@
     <path
         class="map-region-path"
         :d="mainProps.d"
-        @click="(event) => onclick(event, data)"
+        @click="(event) => emit('regionClicked', {event, data})"
     >
     </path>
   </g>
@@ -11,6 +11,7 @@
 
 <script setup>
   const mainProps = defineProps(["d", "data", "onclick"])
+  const emit = defineEmits(['regionClicked'])
 </script>
 
 <style lang="scss">

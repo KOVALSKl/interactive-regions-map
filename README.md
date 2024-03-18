@@ -37,8 +37,10 @@ Each region is a Map Region component.
 | height | Height of main svg component | 900px | - |
 | regions | JSON object that stores region data | - | + |
 | regionsIndexes | JSON object that stores indexes of region to optimize their search | null | - |
-| mapProjection | Custom map projection based on d3 mercators objects, using to manipulate your map | null | - |
+| mapProjection | Custom map projection based on d3 mercators objects, using to manipulate your map | geoTransverseMercator | - |
 | animationDurationTime | Oh wow, just duration time for your animations on map | 1500 | - |
+
+<br/>
 
 The <b>regions</b> prop has a geo.json structure, so your object should look like this:
 ```json
@@ -81,6 +83,7 @@ It should look like this:
 
 The keys of the object are the region id's.
 
+<br/>
 
 <b>MapRegion</b> - The Map Region Component is a nested component that is part of the svg-element map.
 
@@ -90,7 +93,18 @@ The keys of the object are the region id's.
 |:---:|:---:|:---:|:---:|
 | d | Coordinates of the region rendering | - | + |
 | data | Information about the region | - | + |
-| onclick | Method that is invoked after click | - | + |
+
+<br/>
+
+<b>Emits</b>:
+
+This component emits events with default handlers that can be disabled or updated
+
+| Name | Description | Effect |
+|:---:|:---:|:---:|
+| regionClicked | This event occurs after clicking on Region Element | By default fill region by default color and zoom it |
+
+<br/>
 
 <b>RegionInfo</b> - The Region Info Component is a component that visualize the data of the selected region,
 which is stored inside the Map Region Component using <b>data</b> prop.
@@ -110,9 +124,9 @@ This component emits events with default handlers that can be updated
 | nextRegion | This event occurs after clicking the "Next" button | Change selected region - forward |
 | previousRegion | This event occurs after clicking the "Previous" button | Change selected region - backward |
  
-
+<br/>
 <b>Where can I find the JSON file with the coordinates of my country or anything else?</b>
-
+<br/><br/>
 Here the links:
 
 1. <a href="https://d3js.org/">D3</a> - The library to draw svg elements using JavaScript

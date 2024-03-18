@@ -3,6 +3,12 @@
     import RegionsMap from "@/components/RegionsMap/RegionsMap.vue";
     import RegionInfo from "@/components/Cards/RegionInfo/RegionInfo.vue"
 
+    import regionsJSON from "/src/assets/map.json"
+    import regionsIndexesJSON from "/src/assets/indexed_map.json"
+
+    const regions = computed(() => regionsJSON)
+    const regionsIndexes = computed(() => regionsIndexesJSON)
+
     const width = 720
     const height = 720
 </script>
@@ -16,6 +22,8 @@
             <regions-map
                     :width="width"
                     :height="height"
+                    :regions="regions"
+                    :regions-indexes="regionsIndexes"
             >
                 <template #default="props">
                     <region-info
