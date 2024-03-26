@@ -2,6 +2,11 @@
 
 Embed Interactive Regions Map to your Vue Project
 
+## Demo
+
+<a href="https://interactive-regions-map.netlify.app">Here's</a> 
+an example of how the package works
+
 ## Description
 
 This package will allow you to embed an interactive map of the regions in your Vue project
@@ -9,6 +14,10 @@ using Vue Components.
 
 To create the map, the <a href="https://d3js.org/"><b>D3</b></a> 
 library is used to draw <b>SVG</b> for the region elements.
+
+The project is under development, follow the changes and offer solutions on my 
+<a href="https://github.com/KOVALSKl/interactive-regions-map.git">GitHub</a> <3
+
 
 ## Installation
 
@@ -133,14 +142,4 @@ Here the links:
 2. <a href="https://gadm.org/download_country.html">GADM</a> - The data of the country's regions and not only them 
 (use <b>level1</b> from GeoJSON to build a map of the regions, and use map into the package)
 3. <a href="https://geojson.io/#map=2/0/20">geojson</a> - powered by <b>mapbox</b>
-
-
-
-### About
-
-<a href="https://interactive-regions-map.netlify.app">Here's</a> 
-an example of how the package works
-
-The project is under development, follow the changes and offer solutions on my 
-<a href="https://github.com/KOVALSKl/interactive-regions-map.git">GitHub</a> <3
 

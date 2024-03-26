@@ -20,7 +20,10 @@
     "clickable",
     "component"
   ],
-  "files": ["dist", "src/components"],
+  "files": [
+    "dist",
+    "src/components"
+  ],
   "main": "./dist/interactive-regions-map.umd.cjs",
   "module": "./dist/interactive-regions-map.js",
   "exports": {
@@ -40,18 +43,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "d3": "^7.8.5",
-    "vue": "^3.4.15"
+    "d3": "^7.8.0",
+    "vue": "^3.0.0"
   },
   "peerDependencies": {
-    "vue": "^3.0.0",
-    "d3": "^7.8.0"
+    "d3": "^7.8.0",
+    "vue": "^3.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.3",
     "sass": "^1.71.1",
     "vite": "^5.0.11",
-    "vue-router": "^4.3.0",
     "vuetify": "^3.5.8"
   }
 }

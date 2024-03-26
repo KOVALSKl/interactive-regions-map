@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-  const mainProps = defineProps(["d", "data", "onclick"])
+  const mainProps = defineProps(["d", "data"])
   const emit = defineEmits(['regionClicked'])
 </script>
 

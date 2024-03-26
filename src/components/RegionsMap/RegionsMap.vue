@@ -1,6 +1,6 @@
 <script setup>
   import * as d3 from "d3"
-  import { ref, onMounted, computed } from "vue"
+  import { ref, onMounted, computed, watch, reactive } from "vue"
 
   // Components
   import MapRegion from "@/components/MapRegion/MapRegion.vue";
@@ -36,6 +36,8 @@
   const emits = defineEmits(['nextRegion', 'previousRegion'])
 
   const mapDataFeaturesLength = props.regions.features.length
+  let tags = [];
+  let tagsMap = new Map();
 
   const projection = computed(() => {
     return (props.mapProjection ?? d3.geoTransverseMercator()
@@ -57,9 +59,20 @@
     return props.regions.features[currentRegionIndex.value]
   })
 
+  watch(currentRegionIndex, (newValue, oldValue) => {
+    console.log(`index was changed ${newValue}`)
+    currentRegion.value = props.regions.features[newValue]
+  })
+
+  watch(currentRegion, (newRegion, oldRegion) => {
+    tagsMap.get(oldRegion.properties.id)?.style.setProperty("fill", null)
+    tagsMap.get(newRegion.properties.id)?.style.setProperty("fill", "red")
+  })
+
   function setRegionIndex(value) {
     if (value >= 0 && value < mapDataFeaturesLength) {
       currentRegionIndex.value = value
+      console.log(`value updated: ${currentRegionIndex.value}`)
     }
   }
 
@@ -77,24 +90,18 @@
   }
 
   function nextRegion() {
-    currentRegionIndex.value += 1
-
-    if (currentRegionIndex.value === mapDataFeaturesLength) {
-      currentRegionIndex.value = 0
-    }
-
+    console.log("clicked next")
+    setRegionIndex(++currentRegionIndex.value)
+    console.log(currentRegionIndex.value)
     invokeRegionClick()
 
     emits("nextRegion")
   }
 
   function previousRegion() {
-    currentRegionIndex.value -= 1
-
-    if (currentRegionIndex.value < 0) {
-      currentRegionIndex.value = mapDataFeaturesLength - 1
-    }
-
+    console.log("clicked previous")
+    setRegionIndex(--currentRegionIndex.value)
+    console.log(currentRegionIndex.value)
     invokeRegionClick()
 
     emits("previousRegion")
@@ -102,8 +109,8 @@
 
   function invokeRegionClick() {
     let regionId = currentRegion.value.properties.id
-    let regionPathElement = document.getElementById(regionId).lastChild
-    regionPathElement.dispatchEvent(new MouseEvent("click", undefined))
+    let regionPathElement = tagsMap.get(regionId);
+    regionPathElement.dispatchEvent(new PointerEvent("click", undefined))
   }
 
   function zoomed(event) {
@@ -121,20 +128,19 @@
   }
 
   function clicked({event, data}) {
-    console.log(event)
+    console.log(event);
     const [[x0, y0], [x1, y1]] = path.value.bounds(data);
     event.stopPropagation();
-    regionsHTMlTags.value.transition().style("fill", null)
-
-    d3.select(event.currentTarget).transition().style("fill", "red");
 
     let regionIndex;
 
+    console.log(data)
     if(props.regionsIndexes)
       regionIndex = getRegionIndex(data)
     else
       regionIndex = findRegionIndex(data)
 
+    console.log(regionIndex)
     setRegionIndex(regionIndex)
 
     map.value.transition().duration(props.animationDurationTime).call(
@@ -155,8 +161,15 @@
         .on("click", reset)
         .call(zoom.value)
 
-    regionsHTMlTags.value = d3.selectAll("path")
+    tags = document.querySelectorAll("path.map-region-path").values();
+
+    for (let tag of tags) {
+      tagsMap.set(tag.parentElement.id, tag)
+    }
+
     g.value = d3.select("#regions-container")
+
+    invokeRegionClick();
   })
 
 </script>
